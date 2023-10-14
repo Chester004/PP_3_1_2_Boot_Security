@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* CSS для размещения элементов в таблице пользователя */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse; /* Убирает промежутки между ячейками таблицы */
+        }
+
+        .user-table th, .user-table td {
+            border: 1px solid #000; /* Рамка для каждой ячейки */
+            padding: 5px; /* Отступы внутри ячейки */
+            text-align: center; /* Выравнивание текста по центру */
+        }
+
+        /* Стиль для заголовков таблицы */
+        .user-table th {
+            font-size: 24px; /* Увеличиваем размер заголовков на 10 пикселей */
+            background-color: lightgray; /* Добавляем фоновый цвет */
+        }
+
+        .user-container {
+            display: table-row; /* Каждый контейнер пользователя - это строка таблицы */
+        }
+
+        .user-container h1 {
+            font-size: 14px; /* Уменьшаем размер текста */
+        }
+
+        .button-container {
+            display: table-cell; /* Контейнер кнопок также является ячейкой таблицы */
+            vertical-align: middle; /* Выравнивание по вертикали для центрирования кнопок */
+        }
+
+        .button-container form {
+            display: inline; /* Размещение формы с кнопками в одну строку */
+        }
+    </style>
+</head>
+<body>
+<div>
+    <table class="user-table">
+        <tr> <!-- Заголовки таблицы -->
+            <th>Name</th>
+            <th>LastName</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        <th:block th:each="user : ${users}">
+            <tr class="user-container">
+                <td><h1 th:text="${user.getFirstName()}">FirstName</h1></td>
+                <td><h1 th:text="${user.getLastName()}">LastName</h1></td>
+                <td><h1 th:text="${user.getEmail()}">Email</h1></td>
+                <td class="button-container">
+                    <form th:action="@{/edit}">
+                        <button type="submit" th:name="id" th:value="${user.getId()}">Edit</button>
+                    </form>
+                    <form th:method="POST" th:action="@{/delete}">
+                        <button type="submit" th:name="id" th:value="${user.getId()}">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+
+    <br/>
+    <hr/>
+    <a href="/new">Create new User</a>
+</div>
+</body>
+</html>
