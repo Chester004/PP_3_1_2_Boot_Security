@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
+
     @Autowired
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
@@ -19,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userService.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Email not found"));
+        User user = userService.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
         return SecurityUser.fromUser(user);
     }
 }

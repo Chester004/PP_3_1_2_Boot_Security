@@ -34,6 +34,5 @@ public class UserValidator implements Validator {
                 || (bdUser.isPresent() && !user.getId().equals(bdUser.get().getId()))) {
             errors.rejectValue("email", "", "Email is already taken");
         }
-        ;
     }
 }

@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,7 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("user") @Valid User user,BindingResult bindingResult, Model model) {
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         validator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("allRoles", roleService.findAll());
@@ -74,7 +75,7 @@ public class AdminController {
 
     @PostMapping("/delete")
     public String delete(@RequestParam("id") Long id) {
-            userService.delete(id);
+        userService.delete(id);
         return "redirect:/admin/";
     }
 
