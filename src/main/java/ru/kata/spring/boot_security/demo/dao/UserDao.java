@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.dao;
 
 
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;

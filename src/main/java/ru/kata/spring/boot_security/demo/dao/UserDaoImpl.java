@@ -1,7 +1,11 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 import javax.persistence.EntityManager;
+
+import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -13,9 +17,18 @@ public class UserDaoImpl implements UserDao {
 
     private final EntityManager em;
 
+    private PasswordEncoder passwordEncoder;
+
+
+
     @Autowired
     public UserDaoImpl(EntityManager em) {
         this.em = em;
+    }
+    @Lazy
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAllUsers() {
@@ -23,6 +36,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         em.persist(user);
     }
 
@@ -31,13 +45,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     public Optional<User> findByEmail(String email) {
-       Optional<User> user = em.createQuery("FROM User where email = :email", User.class).setParameter("email", email).getResultStream().findAny();
-       if(user.isPresent()){
-           System.out.println(user.get().getRoles());
-       }
+       Optional<User> user = em.createQuery("select distinct u from User AS u left join fetch u.roles where u.email = :email", User.class)
+               .setParameter("email", email).getResultStream().findAny();
         return user;
     }
     public void update(User updatedUser) {
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         em.merge(updatedUser);
     }
 

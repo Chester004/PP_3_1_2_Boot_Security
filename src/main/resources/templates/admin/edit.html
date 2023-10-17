@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Person</title>
+</head>
+<body>
+<div style="text-align: right;">
+    <a th:href="@{/logout}">Logout</a>
+</div>
+
+<form th:method="POST" th:action="@{/admin/update}" th:object="${user}">
+    <input type="hidden" th:name="id" th:value="${user.getId()}">
+
+    <label for="firstname">Enter name:</label>
+    <input type="text" th:field="*{firstName}" id="firstname"/>
+    <p style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Name error</p>
+    <br/>
+    <label for="lastname">Enter lastname:</label>
+    <input type="text" th:field="*{lastName}" id="lastname"/>
+    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName error</div>
+    <br/>
+    <label for="email">Enter email</label>
+    <input type="text" th:field="*{email}" id="email"/>
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</div>
+    <br/>
+    <label for="password">Enter password:</label>
+    <input type="password" th:field="*{password}" id="password"/>
+    <br/>
+    <label>Roles:
+        <div th:each="role : ${allRoles}">
+            <input type="checkbox" name="roles"
+                   th:id="'role_' + ${role.id}"
+                   th:value="${role.getId()}"
+                   th:checked="${user.roles != null && user.roles.contains(role)}"
+            />
+            <label th:for="'role_' + ${role.id}" th:text="${role.name.split('_')[1]}"></label>
+        </div>
+    </label>
+
+    <!--    <label>Roles:-->
+<!--        <input type="checkbox" name="roles"-->
+<!--               th:each="role : ${allRoles}"-->
+<!--               th:text="${role.name.split('_')[1]}"-->
+<!--               th:value="${role}"-->
+<!--               th:checked="${user.roles.contains(role)}"-->
+<!--               th:field="*{roles}"-->
+<!--        />-->
+<!--    </label>-->
+    <br/>
+    <input type="submit" value="Update!"/>
+    <input type="button" value="Back" onclick="location.href='/admin'" />
+</form>
+</body>
+</html>
+

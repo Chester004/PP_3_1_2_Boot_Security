@@ -8,15 +8,19 @@ import org.springframework.validation.Validator;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.Optional;
+
 
 @Component
 public class UserValidator implements Validator {
 
     private final UserService userService;
+
     @Autowired
     public UserValidator(UserService userService) {
         this.userService = userService;
     }
+
     @Override
     public boolean supports(Class<?> clazz) {
         return User.class.equals(clazz);
@@ -25,9 +29,11 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
-        if (userService.findByEmail(user.getEmail()).isPresent()){
-            System.err.println("Проверяем mail");
-            errors.rejectValue("email", "","Email is already taken");
-        };
+        Optional<User> bdUser = userService.findByEmail(user.getEmail());
+        if ((bdUser.isPresent() && user.getId() == null)
+                || (bdUser.isPresent() && !user.getId().equals(bdUser.get().getId()))) {
+            errors.rejectValue("email", "", "Email is already taken");
+        }
+        ;
     }
 }

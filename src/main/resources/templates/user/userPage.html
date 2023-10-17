@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example</title>
+    <style>
+        /* Стили для размещения Welcome слева и Logout справа */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Равномерное распределение между элементами */
+            align-items: center; /* Выравниваем вертикально по центру */
+            background-color: lightgray; /* Добавляем фоновый цвет для заголовка */
+            padding: 10px; /* Отступы для заголовка */
+        }
+
+        .welcome-text {
+            text-decoration: none; /* Убираем подчеркивание текста */
+            color: black; /* Цвет текста "Welcome" */
+            font-weight: bold; /* Увеличиваем жирность текста "Welcome" */
+        }
+
+        .logout-link {
+            text-decoration: none; /* Убираем подчеркивание ссылки */
+            color: blue; /* Цвет текста ссылки "Logout" */
+            font-weight: bold; /* Увеличиваем жирность текста "Logout" */
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <a class="welcome-text" th:utext="${person.firstName} + ', welcome spring boot security page!'">Welcome User</a>
+    <a th:href="@{/logout}" class="logout-link">Logout</a>
+</div>
+<label for="firstname">Firstname : </label>
+<p th:text="${person.firstName}" id="firstname"></p>
+<br/>
+<label for="lastname">Lastname : </label>
+<p th:text="${person.lastName}" id="lastname"></p>
+<br/>
+<label for="email">Email : </label>
+<p th:text="${person.email}" id="email"></p>
+<br/>
+<label for="roles">Roles : </label>
+<br/>
+<tr th:each="role : ${person.roles}" id="roles">
+    <td th:text="${role}">nameOfRole</td>
+    <br/>
+</tr>
+<br/>
+</body>
+</html>
