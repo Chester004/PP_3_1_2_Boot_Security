@@ -65,7 +65,7 @@ public class User implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.email = password;
+        this.password = password;
     }
 
     public Long getId() {
@@ -149,10 +149,13 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User: " + "\n" +
-                "id = " + id + "\n" +
-                "firstName = " + firstName + '\n' +
-                "lastName = " + lastName + '\n' +
-                "email = " + email + '\n';
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

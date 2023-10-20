@@ -37,16 +37,6 @@
             <label th:for="'role_' + ${role.id}" th:text="${role.name.split('_')[1]}"></label>
         </div>
     </label>
-
-    <!--    <label>Roles:-->
-<!--        <input type="checkbox" name="roles"-->
-<!--               th:each="role : ${allRoles}"-->
-<!--               th:text="${role.name.split('_')[1]}"-->
-<!--               th:value="${role}"-->
-<!--               th:checked="${user.roles.contains(role)}"-->
-<!--               th:field="*{roles}"-->
-<!--        />-->
-<!--    </label>-->
     <br/>
     <input type="submit" value="Update!"/>
     <input type="button" value="Back" onclick="location.href='/admin'" />

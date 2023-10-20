@@ -3,6 +3,8 @@ package ru.kata.spring.boot_security.demo.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,8 +35,12 @@ public class AdminController {
     }
 
     @GetMapping
-    public String index(Model model) {
+    public String index(Model model, @ModelAttribute("user") User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("allRoles", roleService.findAll());
         return "admin/all";
     }
 
@@ -46,10 +52,15 @@ public class AdminController {
 
     @PostMapping
     public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+        System.err.println("User is :" + user.getEmail());
         validator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+            model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
+            model.addAttribute("users", userService.getAllUsers());
             model.addAttribute("allRoles", roleService.findAll());
-            return "admin/new";
+            return "admin/all";
         }
         userService.save(user);
         return "redirect:/admin/";
@@ -64,10 +75,15 @@ public class AdminController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+        System.err.println(user);
         validator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+            model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
+            model.addAttribute("users", userService.getAllUsers());
             model.addAttribute("allRoles", roleService.findAll());
-            return "admin/edit";
+            return "admin/all";
         }
         userService.update(user);
         return "redirect:/admin/";
