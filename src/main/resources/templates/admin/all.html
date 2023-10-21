@@ -58,7 +58,7 @@
                         <h4>All users</h4>
                     </div>
                     <div class="container-fluid bg-white p-4 border border-2">
-                        <table class="table border-top">
+                        <table class="table border-top" id="userTable">
                             <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -220,9 +220,6 @@
                                                                                th:name="email"
                                                                                th:value="${lineuser.getEmail()}"
                                                                                id="deleteEmail" disabled/>
-                                                                        <!--                                                                <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email-->
-                                                                        <!--                                                                    error-->
-                                                                        <!--                                                                </div>-->
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label for="deletePassword" class="form-label">Enter
@@ -231,10 +228,6 @@
                                                                                th:name="password"
                                                                                th:value="${lineuser.getPassword()}"
                                                                                id="deletePassword" disabled/>
-                                                                        <!--                                                                <div style="color: red" th:if="${#fields.hasErrors('password')}"-->
-                                                                        <!--                                                                     th:errors="*{password}">-->
-                                                                        <!--                                                                    password error-->
-                                                                        <!--                                                                </div>-->
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label for="deleteRole"
@@ -327,6 +320,60 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
+<script>
+    // Функция для выполнения запроса к API сервера и обновления таблицы
+    function updateUserTable() {
+        var userTable = document.getElementById("userTable");
+        var tbody = userTable.querySelector("tbody");
+
+        // Очищаем существующие строки таблицы
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        // Выполняем запрос к API серверу
+        fetch('/api')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(user) {
+                    var row = tbody.insertRow();
+                    row.insertCell(0).textContent = user.id;
+                    row.insertCell(1).textContent = user.firstName;
+                    row.insertCell(2).textContent = user.lastName;
+                    row.insertCell(3).textContent = user.email;
+                    var rolesCell = row.insertCell(4);
+                    user.roles.forEach(function(role) {
+                        rolesCell.textContent += role.name.split('_')[1] + ' ';
+                    });
+
+                    var editButton = document.createElement("button");
+                    editButton.textContent = "Edit";
+                    editButton.className = "btn btn-primary";
+                    editButton.addEventListener("click", function() {
+                        // Обработка нажатия кнопки "Edit" для конкретного пользователя
+                        // Возможно, вызов модального окна для редактирования
+                    });
+                    row.insertCell(5).appendChild(editButton);
+
+                    var deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete";
+                    deleteButton.className = "btn btn-danger";
+                    deleteButton.addEventListener("click", function() {
+                        // Обработка нажатия кнопки "Delete" для конкретного пользователя
+                        // Возможно, вызов модального окна для подтверждения удаления
+                    });
+                    row.insertCell(6).appendChild(deleteButton);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка при запросе к API: ', error);
+            });
+    }
+
+    // Вызов функции для обновления таблицы при загрузке страницы
+    updateUserTable();
+
+</script>
 </body>
 </html>
 
