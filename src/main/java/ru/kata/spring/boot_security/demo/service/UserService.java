@@ -12,7 +12,7 @@ public interface UserService {
 
     void save(User user);
 
-    User show(Long id);
+    Optional<User> show(Long id);
 
     Optional<User> findByEmail(String email);
 

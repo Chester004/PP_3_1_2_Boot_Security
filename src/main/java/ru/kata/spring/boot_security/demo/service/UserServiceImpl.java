@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User show(Long id) {
-        return userRepository.findById(id).get();
+    public Optional<User> show(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (show(id) != null) {
+        if (show(id).isPresent()) {
             userRepository.deleteById(id);
         }
     }

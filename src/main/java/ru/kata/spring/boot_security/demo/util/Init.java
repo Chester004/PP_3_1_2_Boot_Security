@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
@@ -15,12 +14,10 @@ import java.util.Set;
 public class Init {
 
     private final UserService userService;
-    private final RoleService roleService;
 
     @Autowired
-    public Init(UserService userService, RoleService roleService) {
+    public Init(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @PostConstruct
