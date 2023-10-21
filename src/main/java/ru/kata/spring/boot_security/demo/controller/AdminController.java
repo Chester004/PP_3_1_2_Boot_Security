@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -34,55 +35,34 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public String index(Model model, @ModelAttribute("user") User user) {
+    @ModelAttribute
+    public void addAttributes(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("allRoles", roleService.findAll());
+    }
+
+    @GetMapping
+    public String index(@ModelAttribute("user") User user) {
         return "admin/all";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model, @ModelAttribute("user") User user) {
-        model.addAttribute("allRoles", roleService.findAll());
-        return "admin/new";
-    }
-
     @PostMapping
-    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
-        System.err.println("User is :" + user.getEmail());
+    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         validator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentPrincipalName = authentication.getName();
-            model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
-            model.addAttribute("users", userService.getAllUsers());
-            model.addAttribute("allRoles", roleService.findAll());
             return "admin/all";
         }
         userService.save(user);
         return "redirect:/admin/";
     }
 
-    @GetMapping("/edit")
-    public String edit(Model model, @RequestParam("id") Long id) {
-        model.addAttribute("user", userService.show(id));
-        model.addAttribute("allRoles", roleService.findAll());
-        return "admin/edit";
-    }
-
     @PostMapping("/update")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
-        System.err.println(user);
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         validator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentPrincipalName = authentication.getName();
-            model.addAttribute("person", userService.findByEmail(currentPrincipalName).get());
-            model.addAttribute("users", userService.getAllUsers());
-            model.addAttribute("allRoles", roleService.findAll());
             return "admin/all";
         }
         userService.update(user);

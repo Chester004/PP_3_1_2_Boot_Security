@@ -30,8 +30,11 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
         Optional<User> bdUser = userService.findByEmail(user.getEmail());
+        System.err.println(user);
+        System.err.println(bdUser.isPresent());
         if ((bdUser.isPresent() && user.getId() == null)
                 || (bdUser.isPresent() && !user.getId().equals(bdUser.get().getId()))) {
+            System.err.println("Прошел");
             errors.rejectValue("email", "", "Email is already taken");
         }
     }

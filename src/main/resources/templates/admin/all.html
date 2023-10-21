@@ -182,7 +182,7 @@
 <!--                                                    th:value="${lineuser.getId()}">Delete-->
 <!--                                            </button>-->
                                             <button class="btn btn-danger" data-bs-toggle="modal"
-                                                    th:attr="data-bs-target='#modal-delete'+${lineuser.id}">Edit</button>
+                                                    th:attr="data-bs-target='#modal-delete'+${lineuser.id}">Delete</button>
                                             <div th:fragment="modal" class="modal fade" th:id="modal-delete+${lineuser.id}"
                                                  tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -312,7 +312,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="takerole" class="form-label">Role</label>
-                            <select type class="form-select" multiple th:size="${allRoles.size()}" th:field="*{roles}" id ="takerole">
+                            <select class="form-select" multiple th:size="${allRoles.size()}" th:field="*{roles}" id ="takerole">
                                 <option th:each="role : ${allRoles}" th:value="${role.getId()}" th:text="${role.name.split('_')[1]}">role</option>
                             </select>
                             </div>

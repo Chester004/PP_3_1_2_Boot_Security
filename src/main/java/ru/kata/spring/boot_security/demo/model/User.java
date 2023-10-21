@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Size(min = 2, max = 20, message = "Lastname should be between 2 and 20 characters")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @NotEmpty(message = "Email is not be empty")
     @Email(message = "Email is not valid")
     private String email;
