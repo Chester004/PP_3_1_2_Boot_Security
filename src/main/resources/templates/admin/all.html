@@ -71,198 +71,6 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <th:block th:each="lineuser : ${users}">
-                                <tr class="user-container">
-                                    <th th:text="${lineuser.getId()}" scope="row">Id</th>
-                                    <td th:text="${lineuser.getFirstName()}">FirstName</td>
-                                    <td th:text="${lineuser.getLastName()}">LastName</td>
-                                    <td th:text="${lineuser.getEmail()}">Email</td>
-                                    <td>
-                                        <th:block th:each="role : ${lineuser.getRoles()}" th:text="${role} + ' '">Roles
-                                        </th:block>
-                                    </td>
-                                    <td class="button-container">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-lineuser="${lineuser}"
-                                                   th:attr="data-bs-target='#modal-warning'+${lineuser.id}" data-bs-whatever="hello">Edit</button>
-                                        <div th:fragment="modal" class="modal fade" th:id="modal-warning+${lineuser.id}"
-                                                    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit user</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <!--                                                        Модальное окно-->
-                                                            <form th:method="POST" th:action="@{/admin/update}"
-                                                                  th:object="${user}" class="text-center">
-                                                                <div class="container col-6 align-items-center mt-2">
-                                                                    <input type="hidden" th:name="id"
-                                                                           th:value="${lineuser.getId()}">
-                                                                    <div class="mb-3">
-                                                                        <label for="editFirstname" class="form-label">Enter
-                                                                            name:</label>
-                                                                        <input type="text" class="form-control"
-                                                                               th:name="firstName"
-                                                                               th:value="${lineuser.getFirstName()}"
-                                                                               id="editFirstname"/>
-                                                                        <!--                                                                <div style="color:red" th:if="${#fields.hasErrors('firstName')}"-->
-                                                                        <!--                                                                     th:errors="*{firstName}">-->
-                                                                        <!--                                                                    Name error-->
-                                                                        <!--                                                                </div>-->
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="editLastName" class="form-label">Enter
-                                                                            lastname:</label>
-                                                                        <input type="text" class="form-control"
-                                                                               th:name="lastName"
-                                                                               th:value="${lineuser.getLastName()}"
-                                                                               id="editLastName"/>
-                                                                        <!--                                                                <div style="color: red" th:if="${#fields.hasErrors('lastName')}"-->
-                                                                        <!--                                                                     th:errors="*{lastName}">-->
-                                                                        <!--                                                                    LastName error-->
-                                                                        <!--                                                                </div>-->
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="editEmail" class="form-label">Enter
-                                                                            email:</label>
-                                                                        <input type="email" class="form-control"
-                                                                               th:name="email"
-                                                                               th:value="${lineuser.getEmail()}"
-                                                                               id="editEmail"/>
-                                                                        <!--                                                                <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email-->
-                                                                        <!--                                                                    error-->
-                                                                        <!--                                                                </div>-->
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="editPassword" class="form-label">Enter
-                                                                            password:</label>
-                                                                        <input type="password" class="form-control"
-                                                                               th:name="password"
-                                                                               th:value="${lineuser.getPassword()}"
-                                                                               id="editPassword"/>
-                                                                        <!--                                                                <div style="color: red" th:if="${#fields.hasErrors('password')}"-->
-                                                                        <!--                                                                     th:errors="*{password}">-->
-                                                                        <!--                                                                    password error-->
-                                                                        <!--                                                                </div>-->
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="editRole"
-                                                                               class="form-label">Role</label>
-                                                                        <select type class="form-select" multiple
-                                                                                th:size="${allRoles.size()}"
-                                                                                th:name="roles"
-                                                                                th:value="${lineuser.getRoles()}"
-                                                                                id="editRole">
-                                                                            <option th:each="role : ${allRoles}"
-                                                                                    th:value="${role.getId()}"
-                                                                                    th:text="${role.name.split('_')[1]}">
-                                                                                role
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="d-flex justify-content-end">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close
-                                                                    </button>
-                                                                    <button type="submit" class="btn btn-primary ms-2">
-                                                                        Edit
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="button-container">
-<!--                                        <form th:method="POST" th:action="@{/admin/delete}">-->
-<!--                                            <button class="btn btn-danger" type="submit" th:name="id"-->
-<!--                                                    th:value="${lineuser.getId()}">Delete-->
-<!--                                            </button>-->
-                                            <button class="btn btn-danger" data-bs-toggle="modal"
-                                                    th:attr="data-bs-target='#modal-delete'+${lineuser.id}">Delete</button>
-                                            <div th:fragment="modal" class="modal fade" th:id="modal-delete+${lineuser.id}"
-                                                 tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="deleteModalLabel">Delete user</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!--                                                        Модальное окно delete-->
-                                                            <form th:method="POST" th:action="@{/admin/delete}"
-                                                                  th:object="${user}" class="text-center">
-                                                                <div class="container col-6 align-items-center mt-2">
-                                                                    <input type="hidden" th:name="id" th:value="${lineuser.getId()}">
-                                                                    <div class="mb-3">
-                                                                        <label for="deleteFirstname" class="form-label">Enter
-                                                                            name:</label>
-                                                                        <input type="text" class="form-control"
-                                                                               th:name="firstName"
-                                                                               th:value="${lineuser.getFirstName()}"
-                                                                               id="deleteFirstname" disabled/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="deleteLastName" class="form-label">Enter
-                                                                            lastname:</label>
-                                                                        <input type="text" class="form-control"
-                                                                               th:name="lastName"
-                                                                               th:value="${lineuser.getLastName()}"
-                                                                               id="deleteLastName" disabled/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="deleteEmail" class="form-label">Enter
-                                                                            email:</label>
-                                                                        <input type="email" class="form-control"
-                                                                               th:name="email"
-                                                                               th:value="${lineuser.getEmail()}"
-                                                                               id="deleteEmail" disabled/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="deletePassword" class="form-label">Enter
-                                                                            password:</label>
-                                                                        <input type="password" class="form-control"
-                                                                               th:name="password"
-                                                                               th:value="${lineuser.getPassword()}"
-                                                                               id="deletePassword" disabled/>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="deleteRole"
-                                                                               class="form-label">Role</label>
-                                                                        <select type class="form-select" multiple
-                                                                                th:size="${allRoles.size()}"
-                                                                                th:name="roles"
-                                                                                th:value="${lineuser.getRoles()}"
-                                                                                id="deleteRole" disabled>
-                                                                            <option th:each="role : ${allRoles}"
-                                                                                    th:value="${role.getId()}"
-                                                                                    th:text="${role.name.split('_')[1]}">
-                                                                                role
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="d-flex justify-content-end">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close
-                                                                    </button>
-                                                                    <button type="submit" class="btn btn-danger ms-2">
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </td>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </th:block>
                             </tbody>
                         </table>
                     </div>
@@ -271,7 +79,7 @@
                 <div class="tab-pane fade" id="new-tab-pane" role="tabpanel" aria-labelledby="new-tab-pane"
                      tabindex="0">
                     <div class="container col-3 align-items-center mt-2">
-                        <form th:method="POST" th:action="@{/admin/}" th:object="${user}" class="text-center">
+                        <form id="createForm" th:method="POST" th:action="@{/admin/}" th:object="${user}" class="text-center" enctype="application/x-www-form-urlencoded">
                             <div class="mb-3">
                                 <label for="firstname" class="form-label">Enter name:</label>
                                 <input type="text" class="form-control" th:field="*{firstName}" id="firstname"/>
@@ -304,12 +112,12 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="takerole" class="form-label">Role</label>
-                            <select class="form-select" multiple th:size="${allRoles.size()}" th:field="*{roles}" id ="takerole">
-                                <option th:each="role : ${allRoles}" th:value="${role.getId()}" th:text="${role.name.split('_')[1]}">role</option>
+                                <label for="takeRole" class="form-label">Role</label>
+                            <select class="form-select" multiple th:size="${allRoles.size()}" th:field="*{roles}" id ="takeRole">
+                                <option th:each="role : ${allRoles}" th:value="${role.id}"  th:text="${role.name.split('_')[1]}">role</option>
                             </select>
                             </div>
-                            <input class="btn btn-success" type="submit" value="Add new user"/>
+                            <input type="submit" class="btn btn-success" value="Add new user" id="addUserButton">
                         </form>
                     </div>
                 </div>
@@ -317,9 +125,96 @@
         </div>
     </div>
 </div>
+<div>
+    <div class="modal" id="modal-edit"
+         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit user</h1>
+                </div>
+                <div class="modal-body">
+                    <!--                                                Модальное окно-->
+                    <form th:method="POST" th:action="@{/admin/update}"
+                          th:object="${user}" class="text-center" id="editForm" >
+                        <div class="container col-6 align-items-center mt-2">
+                            <input type="hidden" id="editId" value="-1">
+                            <div class="mb-3">
+                                <label for="editFirstname" class="form-label">Enter
+                                    name:</label>
+                                <input type="text" class="form-control"
+                                       name="firstName"
+                                       value="firstName"
+                                       id="editFirstname"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLastName" class="form-label">Enter
+                                    lastname:</label>
+                                <input type="text" class="form-control"
+                                       name="lastName"
+                                       value="lastName"
+                                       id="editLastName"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmail" class="form-label">Enter
+                                    email:</label>
+                                <input type="email" class="form-control"
+                                       name="email"
+                                       value="email"
+                                       id="editEmail"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPassword" class="form-label">Enter
+                                    password:</label>
+                                <input type="password" class="form-control"
+                                       name="password"
+                                       value="password"
+                                       id="editPassword"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editRole"
+                                       class="form-label">Role</label>
+                                <select type class="form-select" multiple
+                                        th:size="${allRoles.size()}"
+                                        th:name="roles"
+                                        th:value="roles"
+                                        id="editRole">
+                                    <option th:each="role : ${allRoles}"
+                                            th:value="${role.getId()}"
+                                            th:text="${role.name.split('_')[1]}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal" id="close_button">Close
+                            </button>
+                            <button type="submit" class="btn btn-primary ms-2" th:text="Delete" id="sendEditOrDelete">
+                                ****
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+</script>
+<script>
+    // Получить элемент кнопки по id
+    var closeButton = document.getElementById("close_button");
+
+    // Добавить обработчик события click
+    closeButton.addEventListener("click", function() {
+        // Закрыть модальное окно
+        var modal = document.getElementById("modal-edit");
+        modal.style.display = "";
+    });
+</script>
 <script>
     // Функция для выполнения запроса к API сервера и обновления таблицы
     function updateUserTable() {
@@ -349,18 +244,77 @@
                     var editButton = document.createElement("button");
                     editButton.textContent = "Edit";
                     editButton.className = "btn btn-primary";
-                    editButton.addEventListener("click", function() {
-                        // Обработка нажатия кнопки "Edit" для конкретного пользователя
-                        // Возможно, вызов модального окна для редактирования
+                    editButton.setAttribute("data-id", user.id);
+                    editButton.addEventListener("click", function(){
+                        // Настройка формы
+                        var modal = document.getElementById("modal-edit");
+                        modal.querySelector("#exampleModalLabel").textContent = "Edit user";
+                        modal.style.display = "block";
+
+                        var button = document.getElementById("sendEditOrDelete");
+                        button.textContent = "Edit";
+                        button.className = "btn btn-primary ms-2"
+
+
+                        var roleSelect = modal.querySelector("#editRole");
+                        var roles = Array.from(roleSelect.options);
+
+                        console.log("User roles:", user.roles);
+
+                        roles.forEach(function (option) {
+                            var roleId = parseInt(option.value);
+                            var isSelected = user.roles.some(role => role.id == roleId);
+                            console.log("Role ID:", roleId, "Is Selected:", isSelected);
+                            option.selected = isSelected;
+                        });
+
+                        console.log("Selected roles in the select:", Array.from(roleSelect.selectedOptions).map(function(option) {
+                            return option.value;
+                        }));
+                        modal.querySelector("#editId").value = user.id;
+                        modal.querySelector("#editFirstname").value = user.firstName;
+                        modal.querySelector("#editLastName").value = user.lastName;
+                        modal.querySelector("#editEmail").value = user.email;
+                        modal.querySelector("#editPassword").value = user.password;
+                        modal.querySelectorAll("input").forEach(elem => elem.readOnly = false);
                     });
                     row.insertCell(5).appendChild(editButton);
 
                     var deleteButton = document.createElement("button");
                     deleteButton.textContent = "Delete";
                     deleteButton.className = "btn btn-danger";
+                    editButton.setAttribute("data-id", user.id);
+
                     deleteButton.addEventListener("click", function() {
-                        // Обработка нажатия кнопки "Delete" для конкретного пользователя
-                        // Возможно, вызов модального окна для подтверждения удаления
+                        var modal = document.getElementById("modal-edit");
+                        modal.querySelector("#exampleModalLabel").textContent = "Delete user";
+                        modal.style.display = "block";
+                        var button = document.getElementById("sendEditOrDelete");
+                        button.textContent = "Delete";
+                        button.className = "btn btn-danger ms-2"
+
+                        var roleSelect = modal.querySelector("#editRole");
+                        var roles = Array.from(roleSelect.options);
+
+                        console.log("User roles:", user.roles);
+
+                        roles.forEach(function (option) {
+                            var roleId = parseInt(option.value);
+                            var isSelected = user.roles.some(role => role.id == roleId);
+                            console.log("Role ID:", roleId, "Is Selected:", isSelected);
+                            option.selected = isSelected;
+                        });
+
+                        console.log("Selected roles in the select:", Array.from(roleSelect.selectedOptions).map(function(option) {
+                            return option.value;
+                        }));
+                        modal.querySelector("#editId").value = user.id;
+                        modal.querySelector("#editFirstname").value = user.firstName;
+                        // modal.querySelector("#editFirstname").readOnly = true;
+                        modal.querySelector("#editLastName").value = user.lastName;
+                        modal.querySelector("#editEmail").value = user.email;
+                        modal.querySelector("#editPassword").value = user.password;
+                        modal.querySelectorAll("input").forEach(elem => elem.readOnly = true);
                     });
                     row.insertCell(6).appendChild(deleteButton);
                 });
@@ -372,7 +326,99 @@
 
     // Вызов функции для обновления таблицы при загрузке страницы
     updateUserTable();
+</script>
+<script>
+    document.getElementById("editForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Отменяет стандартное поведение отправки формы
+        var button = document.getElementById("sendEditOrDelete");
+        // Собираем данные из формы
+        var formData = {
+            id: document.getElementById("editId").value,
+            firstName: document.getElementById("editFirstname").value,
+            lastName: document.getElementById("editLastName").value,
+            email: document.getElementById("editEmail").value,
+            password: document.getElementById("editPassword").value,
+            roles: Array.from(document.getElementById("editRole").selectedOptions).map(option => ({ id: option.value}))
+        };
 
+        // Преобразуем данные в JSON
+        var jsonData = JSON.stringify(formData);
+        console.log(jsonData);
+
+        if (button.innerText == "Edit"){
+            URL = "/api/edit";
+        }else {
+            URL = "/api/delete";
+        }
+        console.log(URL);
+        fetch(URL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+            .then(response => {
+                if (response.ok) {
+                    updateUserTable();
+                    return response.text(); // Возвращает текстовый ответ
+                } else {
+                    throw new Error("Network response was not ok");
+                }
+            })
+            .then(data => {
+                // Обработка успешного ответа
+                console.log(data);
+            })
+            .catch(error => {
+                // Обработка ошибки
+                console.error("Ошибка: " + error.message);
+            });
+        var modal = document.getElementById("modal-edit");
+        modal.style.display = "none";
+    });
+
+</script>
+<script>
+        document.getElementById("createForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Отменяет стандартное поведение отправки формы
+            // Собираем данные из формы
+        var formData = {
+        firstName: document.getElementById("firstname").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        roles: Array.from(document.getElementById("takeRole").selectedOptions).map(option => ({ id: option.value}))
+    };
+
+        // Преобразуем данные в JSON
+        var jsonData = JSON.stringify(formData);
+        console.log(jsonData);
+
+        fetch("/api/create", {
+        method: "POST",
+        headers: {
+        'Content-Type': 'application/json'
+    },
+        body: jsonData
+    })
+        .then(response => {
+        if (response.ok) {
+            updateUserTable();
+        return response.text(); // Возвращает текстовый ответ
+    } else {
+        throw new Error("Network response was not ok");
+    }
+    })
+        .then(data => {
+        // Обработка успешного ответа
+        console.log(data);
+    })
+        .catch(error => {
+        // Обработка ошибки
+        console.error("Ошибка: " + error.message);
+    });
+    });
 </script>
 </body>
 </html>

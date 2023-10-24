@@ -1,6 +1,11 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -12,7 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Set;
-
+@JsonIgnoreProperties({"userSet"})
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -23,8 +28,8 @@ public class Role implements GrantedAuthority {
     @Column
     private String name;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private Set<User> userSet;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> userSet;
 
     public Role() {
     }
@@ -33,17 +38,17 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-//    public Set<User> getUserSet() {
-//        return userSet;
-//    }
-//
-//    public void setUserSet(Set<User> userSet) {
-//        this.userSet = userSet;
-//    }
+    public Set<User> getUserSet() {
+        return userSet;
+    }
+
+    public void setUserSet(Set<User> userSet) {
+        this.userSet = userSet;
+    }
 
     @Override
     public String toString() {
-        return this.name.split("_")[1];
+        return this.name;
     }
 
     public Integer getId() {
