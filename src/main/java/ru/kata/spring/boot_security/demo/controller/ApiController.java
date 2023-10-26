@@ -11,27 +11,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.util.UserErrorResponse;
 import ru.kata.spring.boot_security.demo.util.UserNotCreatedException;
+import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class ApiController {
 
     private final UserService userService;
-    private final RoleService roleService;
+    private final UserValidator validator;
     @Autowired
-    public ApiController(UserService userService, RoleService roleService) {
+    public ApiController(UserService userService, UserValidator validator) {
         this.userService = userService;
-        this.roleService = roleService;
+        this.validator = validator;
     }
     @GetMapping
     public List<User> getUsers(){
@@ -45,12 +42,12 @@ public class ApiController {
 
     @PostMapping("/create")
     public ResponseEntity<HttpStatus> create(@RequestBody User user, BindingResult bindingResult){
-        System.err.println("/api/create");
-        System.err.println(user);
-        user.setRoles(user.getRoles().stream().map(role -> roleService.findById(role.getId())).collect(Collectors.toList()));
+
+        validator.validate(user,bindingResult);
+
         if(bindingResult.hasErrors()){
             StringBuilder errorMsg = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error -> errorMsg.append(error).append("-").append(error.getDefaultMessage()).append(";"));
+            bindingResult.getFieldErrors().forEach(error -> errorMsg.append(error.getField()).append(":").append(error.getDefaultMessage()).append(";"));
             throw new UserNotCreatedException(errorMsg.toString());
         }
         userService.save(user);
@@ -61,7 +58,8 @@ public class ApiController {
     public ResponseEntity<HttpStatus> edit(@RequestBody User user, BindingResult bindingResult){
         System.err.println("/api/edit");
         System.err.println(user);
-        user.setRoles(user.getRoles().stream().map(role -> roleService.findById(role.getId())).collect(Collectors.toList()));
+
+        validator.validate(user,bindingResult);
         if(bindingResult.hasErrors()){
             StringBuilder errorMsg = new StringBuilder();
             bindingResult.getFieldErrors().forEach(error -> errorMsg.append(error).append("-").append(error.getDefaultMessage()).append(";"));
@@ -73,8 +71,6 @@ public class ApiController {
 
     @PostMapping("/delete")
     public ResponseEntity<HttpStatus> delete(@RequestBody User user){
-        System.err.println("/api/delete");
-        System.err.println(user);
         userService.delete(user.getId());
         return ResponseEntity.ok(HttpStatus.OK);
     }

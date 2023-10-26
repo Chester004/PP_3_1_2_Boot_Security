@@ -82,34 +82,20 @@
                         <form id="createForm" th:method="POST" th:action="@{/admin/}" th:object="${user}" class="text-center" enctype="application/x-www-form-urlencoded">
                             <div class="mb-3">
                                 <label for="firstname" class="form-label">Enter name:</label>
-                                <input type="text" class="form-control" th:field="*{firstName}" id="firstname"/>
-                                <div style="color:red" th:if="${#fields.hasErrors('firstName')}"
-                                     th:errors="*{firstName}">
-                                    Name error
-                                </div>
+                                <input type="text" minlength="2" maxlength="20" class="form-control" th:field="*{firstName}" id="firstname"/>
                             </div>
                             <div class="mb-3">
                                 <label for="lastName" class="form-label">Enter lastname:</label>
-                                <input type="text" class="form-control" th:field="*{lastName}" id="lastName"/>
-                                <div style="color: red" th:if="${#fields.hasErrors('lastName')}"
-                                     th:errors="*{lastName}">
-                                    LastName error
-                                </div>
+                                <input type="text" minlength="2" maxlength="20" class="form-control" th:field="*{lastName}" id="lastName"/>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Enter email:</label>
-                                <input type="email" class="form-control" th:field="*{email}" id="email"/>
-                                <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email
-                                    error
-                                </div>
+                                <input type="email" pattern="^+@+$" class="form-control" th:field="*{email}" id="email"/>
+                                <span style="color: red" id="email-error" class="error-message"></span>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Enter password:</label>
                                 <input type="password" class="form-control" th:field="*{password}" id="password"/>
-                                <div style="color: red" th:if="${#fields.hasErrors('password')}"
-                                     th:errors="*{password}">
-                                    password error
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="takeRole" class="form-label">Role</label>
@@ -142,7 +128,9 @@
                             <div class="mb-3">
                                 <label for="editFirstname" class="form-label">Enter
                                     name:</label>
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control"\
+                                       minlength="2"
+                                       maxlength="20"
                                        name="firstName"
                                        value="firstName"
                                        id="editFirstname"/>
@@ -151,6 +139,8 @@
                                 <label for="editLastName" class="form-label">Enter
                                     lastname:</label>
                                 <input type="text" class="form-control"
+                                       minlength="2"
+                                       maxlength="20"
                                        name="lastName"
                                        value="lastName"
                                        id="editLastName"/>
@@ -159,6 +149,7 @@
                                 <label for="editEmail" class="form-label">Enter
                                     email:</label>
                                 <input type="email" class="form-control"
+                                       pattern="^+@+$"
                                        name="email"
                                        value="email"
                                        id="editEmail"/>
@@ -382,6 +373,12 @@
 <script>
         document.getElementById("createForm").addEventListener("submit", function (event) {
         event.preventDefault(); // Отменяет стандартное поведение отправки формы
+
+            // Сброс сообщений об ошибках перед валидацией
+            document.querySelectorAll('.error-message').forEach(element => {
+                element.textContent = '';
+            });
+
             // Собираем данные из формы
         var formData = {
         firstName: document.getElementById("firstname").value,
@@ -403,21 +400,19 @@
         body: jsonData
     })
         .then(response => {
-        if (response.ok) {
-            updateUserTable();
-        return response.text(); // Возвращает текстовый ответ
-    } else {
-        throw new Error("Network response was not ok");
-    }
-    })
-        .then(data => {
-        // Обработка успешного ответа
-        console.log(data);
-    })
-        .catch(error => {
-        // Обработка ошибки
-        console.error("Ошибка: " + error.message);
-    });
+            if (response.ok) {
+                updateUserTable();
+                return response.text(); // Возвращает текстовый ответ
+            } else {
+                response.json().then(data =>
+                {
+                    if (data.message.split(":")[0] === "email") {
+                        document.getElementById('email-error').textContent = data.message.split(":")[1];
+                    }
+                }
+                );
+            }
+        })
     });
 </script>
 </body>

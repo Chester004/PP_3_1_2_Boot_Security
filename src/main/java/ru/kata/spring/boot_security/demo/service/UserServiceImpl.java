@@ -10,18 +10,20 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void save(User user){
+        user.setRoles(user.getRoles().stream().map(role -> roleService.findById(role.getId())).collect(Collectors.toList()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
     }
@@ -52,9 +55,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void update(User updatedUser) {
-        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));// Двойной кодинг
-        userRepository.save(updatedUser);
+    public void update(User user) {
+        user.setRoles(user.getRoles().stream().map(role -> roleService.findById(role.getId())).collect(Collectors.toList()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));// Двойной кодинг
+        userRepository.save(user);
     }
 
     @Override
